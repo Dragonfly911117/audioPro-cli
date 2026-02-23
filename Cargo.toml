@@ -3,6 +3,8 @@ name = "audiopro"
 version = "1.0.0"
 edition = "2021"
 description = "CLI tool to control Audio Pro C20 speaker"
+license = "MIT"
+repository = "https://github.com/Dragonfly911117/audioPro-cli"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }

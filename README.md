@@ -35,6 +35,7 @@ audiopro pause               # Pause playback
 audiopro stop                # Stop playback
 audiopro next                # Next track
 audiopro prev                # Previous track
+audiopro source              # List available sources
 audiopro source bluetooth    # Switch source
 audiopro eq                  # List EQ presets
 audiopro eq jazz             # Set EQ by name
@@ -45,7 +46,7 @@ audiopro reboot              # Reboot speaker
 
 ## Supported Sources
 
-wifi, bluetooth, spotify, line-in, optical, airplay, dlna, usb
+wifi, bluetooth (bt), spotify, line-in (linein), optical, airplay, dlna, usb
 
 
 
