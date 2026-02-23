@@ -1,0 +1,55 @@
+# audiopro
+
+CLI tool to control Audio Pro / LinkPlay speakers.
+
+## Installation
+
+```bash
+cargo install --path .
+```
+
+## Configuration
+
+Create `speaker.json` in the current directory or `~/.config/audiopro/speaker.json`:
+
+```json
+{
+    "name": "Audio Pro C20",
+    "ip": "192.168.1.100",
+    "port": 443
+}
+```
+
+## Usage
+
+```
+audiopro status              # Show speaker status
+audiopro volume 50           # Set volume to 50
+audiopro volume +5           # Increase volume by 5
+audiopro volume -10          # Decrease volume by 10
+audiopro mute                # Toggle mute
+audiopro play                # Start playback
+audiopro pause               # Pause playback
+audiopro stop                # Stop playback
+audiopro next                # Next track
+audiopro prev                # Previous track
+audiopro source bluetooth    # Switch source
+audiopro eq                  # List EQ presets
+audiopro eq jazz             # Set EQ by name
+audiopro eq 11               # Set EQ by number
+audiopro preset 1            # Trigger preset 1-10
+audiopro reboot              # Reboot speaker
+```
+
+## Supported Sources
+
+wifi, bluetooth, spotify, line-in, optical, airplay, dlna, usb
+
+## Note
+
+This is AI slop.
+
+## References
+
+- [LinkPlay API](https://github.com/nift4/LinkPlayAPI)
+- [Arylic HTTP API](https://developer.arylic.com/httpapi/)

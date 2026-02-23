@@ -1,0 +1,16 @@
+[package]
+name = "audiopro"
+version = "1.0.0"
+edition = "2021"
+description = "CLI tool to control Audio Pro C20 speaker"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+reqwest = { version = "0.12", features = ["rustls-tls"], default-features = false }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+
+[profile.release]
+strip = true
+lto = true
