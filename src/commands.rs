@@ -96,13 +96,26 @@ pub async fn playback(client: &Client, config: &SpeakerConfig, cmd: &str) -> Res
     Ok(())
 }
 
-pub async fn source(client: &Client, config: &SpeakerConfig, name: &str) -> Result<(), String> {
+pub async fn source(client: &Client, config: &SpeakerConfig, name: Option<&str>) -> Result<(), String> {
+    let Some(name) = name else {
+        println!("Available sources:");
+        println!("  wifi");
+        println!("  bluetooth (bt)");
+        println!("  spotify");
+        println!("  line-in (linein)");
+        println!("  optical");
+        println!("  airplay");
+        println!("  dlna");
+        println!("  usb");
+        return Ok(());
+    };
+
     let sources = source_to_mode();
     let mode = sources
         .get(name.to_lowercase().as_str())
         .ok_or_else(|| {
             format!(
-                "Unknown source '{}'. Valid: wifi, bluetooth, spotify, line-in, optical, airplay, dlna, usb",
+                "Unknown source '{}'. Use 'audiopro source' to list available sources.",
                 name
             )
         })?;

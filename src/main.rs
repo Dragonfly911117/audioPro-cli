@@ -31,8 +31,8 @@ enum Command {
     Next,
     /// Previous track
     Prev,
-    /// Switch source (wifi, bluetooth, spotify, line-in, optical, airplay, dlna, usb)
-    Source { name: String },
+    /// Switch source, or list available sources if none given
+    Source { name: Option<String> },
     /// Set equalizer preset (name or number 0-24), or list all if none given
     Eq { preset: Option<String> },
     /// Trigger preset (1-10)
@@ -70,7 +70,7 @@ async fn main() {
         Command::Stop => commands::playback(&client, &config, "stop").await,
         Command::Next => commands::playback(&client, &config, "next").await,
         Command::Prev => commands::playback(&client, &config, "prev").await,
-        Command::Source { name } => commands::source(&client, &config, &name).await,
+        Command::Source { name } => commands::source(&client, &config, name.as_deref()).await,
         Command::Eq { preset } => commands::eq(&client, &config, preset.as_deref()).await,
         Command::Preset { number } => commands::preset(&client, &config, number).await,
         Command::Reboot => commands::reboot(&client, &config).await,
