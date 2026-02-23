@@ -1,9 +1,4 @@
-mod api;
-mod commands;
-mod config;
-mod constants;
-mod utils;
-
+use audiopro::{api, commands, config};
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
