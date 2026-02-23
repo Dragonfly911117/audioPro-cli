@@ -1,8 +1,8 @@
 use reqwest::Client;
 
-use crate::api::{self, get_status};
+use crate::api::{self, get_device_info, get_status};
 use crate::config::SpeakerConfig;
-use crate::constants::{eq_presets, mode_map, source_to_mode};
+use crate::constants::{eq_presets, loop_mode_map, mode_map, source_to_mode};
 use crate::utils::{decode_hex, format_time};
 
 pub async fn status(client: &Client, config: &SpeakerConfig) -> Result<(), String> {
@@ -172,5 +172,93 @@ pub async fn preset(client: &Client, config: &SpeakerConfig, number: u8) -> Resu
 pub async fn reboot(client: &Client, config: &SpeakerConfig) -> Result<(), String> {
     api::call(client, config, "reboot").await?;
     println!("Rebooting speaker...");
+    Ok(())
+}
+
+pub async fn seek(client: &Client, config: &SpeakerConfig, position: &str) -> Result<(), String> {
+    let ms: u64 = position
+        .parse()
+        .map_err(|_| "Invalid position: must be a number of milliseconds")?;
+    api::call(client, config, &format!("setPlayerCmd:seek:{}", ms)).await?;
+    println!("Seeking to {}", format_time(&ms.to_string()));
+    Ok(())
+}
+
+pub async fn loop_mode(client: &Client, config: &SpeakerConfig, mode: Option<&str>) -> Result<(), String> {
+    let modes = loop_mode_map();
+
+    let Some(mode) = mode else {
+        let status = get_status(client, config).await?;
+        let name = modes
+            .iter()
+            .find(|(k, _)| *k == status.loop_mode.as_str())
+            .map(|(_, v)| *v)
+            .unwrap_or("Unknown");
+        println!("Loop mode: {} ({})", name, status.loop_mode);
+        println!();
+        println!("Available loop modes:");
+        for (code, name) in &modes {
+            println!("  {:>2}  {}", code, name);
+        }
+        return Ok(());
+    };
+
+    let (num, name) = if mode.parse::<i32>().is_ok() {
+        let name = modes
+            .iter()
+            .find(|(k, _)| *k == mode)
+            .map(|(_, v)| *v)
+            .ok_or_else(|| format!("Unknown loop mode '{}'. Use 'audiopro loop' to list modes.", mode))?;
+        (mode, name)
+    } else {
+        let lower = mode.to_lowercase();
+        modes
+            .iter()
+            .find(|(_, v)| v.to_lowercase() == lower)
+            .map(|(k, v)| (*k, *v))
+            .ok_or_else(|| format!("Unknown loop mode '{}'. Use 'audiopro loop' to list modes.", mode))?
+    };
+
+    api::call(client, config, &format!("setPlayerCmd:loopmode:{}", num)).await?;
+    println!("Loop mode: {}", name);
+    Ok(())
+}
+
+pub async fn info(client: &Client, config: &SpeakerConfig) -> Result<(), String> {
+    let info = get_device_info(client, config).await?;
+
+    let netstat = match info.netstat.as_str() {
+        "0" => "Not connected",
+        "1" => "Connecting",
+        "2" => "Connected",
+        _ => &info.netstat,
+    };
+
+    println!("{}", if info.device_name.is_empty() { &config.name } else { &info.device_name });
+    if !info.firmware.is_empty() {
+        println!("  Firmware: {}", info.firmware);
+    }
+    if !info.hardware.is_empty() {
+        println!("  Hardware: {}", info.hardware);
+    }
+    if !info.mcu_ver.is_empty() && info.mcu_ver != "0" {
+        println!("  MCU:      {}", info.mcu_ver);
+    }
+    if !info.mac.is_empty() {
+        println!("  MAC:      {}", info.mac);
+    }
+    println!("  WiFi:     {} ({})", info.wifi_ip, netstat);
+    if !info.eth_ip.is_empty() {
+        println!("  Ethernet: {}", info.eth_ip);
+    }
+    if !info.uuid.is_empty() {
+        println!("  UUID:     {}", info.uuid);
+    }
+    Ok(())
+}
+
+pub async fn play_uri(client: &Client, config: &SpeakerConfig, uri: &str) -> Result<(), String> {
+    api::call(client, config, &format!("setPlayerCmd:play:{}", uri)).await?;
+    println!("Playing: {}", uri);
     Ok(())
 }

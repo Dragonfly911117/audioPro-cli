@@ -1,4 +1,4 @@
-use audiopro::constants::{eq_presets, mode_map, source_to_mode};
+use audiopro::constants::{eq_presets, loop_mode_map, mode_map, source_to_mode};
 
 #[test]
 fn mode_map_spotify() {
@@ -32,4 +32,27 @@ fn source_to_mode_aliases() {
     let sources = source_to_mode();
     assert_eq!(sources.get("bt"), Some(&"bluetooth"));
     assert_eq!(sources.get("linein"), Some(&"line-in"));
+}
+
+#[test]
+fn loop_mode_map_count() {
+    assert_eq!(loop_mode_map().len(), 5);
+}
+
+#[test]
+fn loop_mode_map_sequential() {
+    let modes = loop_mode_map();
+    assert_eq!(modes[0], ("0", "Sequential"));
+}
+
+#[test]
+fn loop_mode_map_repeat_one() {
+    let modes = loop_mode_map();
+    assert!(modes.iter().any(|(k, v)| *k == "-1" && *v == "Repeat One"));
+}
+
+#[test]
+fn loop_mode_map_shuffle() {
+    let modes = loop_mode_map();
+    assert!(modes.iter().any(|(k, v)| *k == "2" && *v == "Shuffle"));
 }

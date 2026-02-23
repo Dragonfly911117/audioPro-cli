@@ -35,3 +35,11 @@ fn format_time_minutes() {
 fn format_time_invalid() {
     assert_eq!(format_time("invalid"), "00:00");
 }
+
+#[test]
+fn format_time_seek_position() {
+    // 30 seconds = 30000ms
+    assert_eq!(format_time("30000"), "00:30");
+    // 3 minutes 45 seconds
+    assert_eq!(format_time("225000"), "03:45");
+}

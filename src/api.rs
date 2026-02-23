@@ -23,6 +23,30 @@ pub struct PlayerStatus {
     pub curpos: String,
     #[serde(default)]
     pub totlen: String,
+    #[serde(default, rename = "Loop")]
+    pub loop_mode: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct DeviceInfo {
+    #[serde(default, rename = "DeviceName")]
+    pub device_name: String,
+    #[serde(default, rename = "Firmware")]
+    pub firmware: String,
+    #[serde(default, rename = "Hardware")]
+    pub hardware: String,
+    #[serde(default, rename = "Uuid")]
+    pub uuid: String,
+    #[serde(default, rename = "Apcli0")]
+    pub wifi_ip: String,
+    #[serde(default, rename = "Eth2")]
+    pub eth_ip: String,
+    #[serde(default, rename = "MAC")]
+    pub mac: String,
+    #[serde(default, rename = "Netstat")]
+    pub netstat: String,
+    #[serde(default, rename = "mcu_ver")]
+    pub mcu_ver: String,
 }
 
 pub fn build_client() -> Result<Client, String> {
@@ -53,4 +77,9 @@ pub async fn call(client: &Client, config: &SpeakerConfig, command: &str) -> Res
 pub async fn get_status(client: &Client, config: &SpeakerConfig) -> Result<PlayerStatus, String> {
     let response = call(client, config, "getPlayerStatus").await?;
     serde_json::from_str(&response).map_err(|e| format!("Failed to parse status: {}", e))
+}
+
+pub async fn get_device_info(client: &Client, config: &SpeakerConfig) -> Result<DeviceInfo, String> {
+    let response = call(client, config, "getStatus").await?;
+    serde_json::from_str(&response).map_err(|e| format!("Failed to parse device info: {}", e))
 }
