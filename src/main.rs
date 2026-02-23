@@ -39,6 +39,14 @@ enum Command {
     Preset { number: u8 },
     /// Reboot speaker
     Reboot,
+    /// Seek to position in current track (milliseconds)
+    Seek { position: String },
+    /// Set or show loop/shuffle mode
+    Loop { mode: Option<String> },
+    /// Show device info (firmware, hardware, network)
+    Info,
+    /// Play audio from a URI
+    Uri { uri: String },
 }
 
 #[tokio::main]
@@ -74,6 +82,10 @@ async fn main() {
         Command::Eq { preset } => commands::eq(&client, &config, preset.as_deref()).await,
         Command::Preset { number } => commands::preset(&client, &config, number).await,
         Command::Reboot => commands::reboot(&client, &config).await,
+        Command::Seek { position } => commands::seek(&client, &config, &position).await,
+        Command::Loop { mode } => commands::loop_mode(&client, &config, mode.as_deref()).await,
+        Command::Info => commands::info(&client, &config).await,
+        Command::Uri { uri } => commands::play_uri(&client, &config, &uri).await,
     };
 
     if let Err(e) = result {

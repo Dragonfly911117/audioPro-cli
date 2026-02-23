@@ -46,6 +46,16 @@ pub fn eq_presets() -> Vec<(&'static str, &'static str)> {
     ]
 }
 
+pub fn loop_mode_map() -> Vec<(&'static str, &'static str)> {
+    vec![
+        ("0", "Sequential"),
+        ("1", "Repeat All"),
+        ("2", "Shuffle"),
+        ("3", "Shuffle + Repeat"),
+        ("-1", "Repeat One"),
+    ]
+}
+
 pub fn source_to_mode() -> HashMap<&'static str, &'static str> {
     HashMap::from([
         ("wifi", "wifi"),

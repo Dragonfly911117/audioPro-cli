@@ -35,18 +35,28 @@ audiopro pause               # Pause playback
 audiopro stop                # Stop playback
 audiopro next                # Next track
 audiopro prev                # Previous track
+audiopro seek 30000          # Seek to 30 seconds (milliseconds)
+audiopro loop                # Show current loop mode
+audiopro loop shuffle        # Set loop mode by name
+audiopro loop 1              # Set loop mode by number
 audiopro source              # List available sources
 audiopro source bluetooth    # Switch source
 audiopro eq                  # List EQ presets
 audiopro eq jazz             # Set EQ by name
 audiopro eq 11               # Set EQ by number
 audiopro preset 1            # Trigger preset 1-10
+audiopro uri http://...      # Play audio from a URI
+audiopro info                # Show device info (firmware, network)
 audiopro reboot              # Reboot speaker
 ```
 
 ## Supported Sources
 
 wifi, bluetooth (bt), spotify, line-in (linein), optical, airplay, dlna, usb
+
+## Loop Modes
+
+Sequential (0), Repeat All (1), Shuffle (2), Shuffle + Repeat (3), Repeat One (-1)
 
 
 
